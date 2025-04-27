@@ -1,0 +1,35 @@
+{% extends 'poll/base.html' %}
+
+{% block title %}Голос прийнято{% endblock %}
+
+{% block content %}
+<h2>Дякуємо за ваш голос!</h2>
+
+<h3>Статистика:</h3>
+
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Квітка</th>
+            <th>Перше місце (3 бали)</th>
+            <th>Друге місце (2 бали)</th>
+            <th>Третє місце (1 бал)</th>
+            <th>Загальний бал</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for flower_score in flower_scores %}
+        <tr>
+            <td>{{ flower_score.flower.name }}</td>
+            <td>{{ flower_score.first_place_votes }}</td>
+            <td>{{ flower_score.second_place_votes }}</td>
+            <td>{{ flower_score.third_place_votes }}</td>
+            <td>{{ flower_score.total_points }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'voting' %}">Змінити голос</a>
+
+{% endblock %}

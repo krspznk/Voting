@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Голосування{% endblock %}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #c9d6ff, #e2e2e2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            width: 100%;
+            max-width: 700px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #222;
+        }
+        form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-top: 6px;
+            font-size: 14px;
+            background: #fff;
+        }
+        button {
+            margin-top: 25px;
+            background: #4b6cb7;
+            background: linear-gradient(to right, #182848, #4b6cb7);
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(to right, #283e51, #485563);
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #182848;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

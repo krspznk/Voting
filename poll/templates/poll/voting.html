@@ -1,0 +1,43 @@
+{% extends 'poll/base.html' %}
+
+{% block title %}Голосування{% endblock %}
+
+{% block content %}
+<p style="text-align:right;">Вітаємо, {{ request.user.first_name }}!
+    <a href="{% url 'logout' %}">Вийти</a>
+</p>
+
+<h2>Голосування</h2>
+
+<div class="objects">
+    {% for flower in flowers %}
+        <div class="object-btn">{{ flower.name }}</div>
+    {% endfor %}
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="first">Перше місце:</label>
+    <select name="first" required>
+        {% for flower in flowers %}
+            <option value="{{ flower.id }}">{{ flower.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="second">Друге місце:</label>
+    <select name="second" required>
+        {% for flower in flowers %}
+            <option value="{{ flower.id }}">{{ flower.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="third">Третє місце:</label>
+    <select name="third" required>
+        {% for flower in flowers %}
+            <option value="{{ flower.id }}">{{ flower.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Надіслати</button>
+</form>
+{% endblock %}
