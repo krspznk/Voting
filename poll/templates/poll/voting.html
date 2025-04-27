@@ -3,11 +3,15 @@
 {% block title %}Голосування{% endblock %}
 
 {% block content %}
-<p style="text-align:right;">Вітаємо, {{ request.user.first_name }}!
-    <a href="{% url 'logout' %}">Вийти</a>
+<p style="text-align:right; margin-bottom: 20px;">Вітаємо, {{ request.user.first_name }}!
+    <a href="{% url 'logout' %}" style="color:#4b6cb7; font-weight:bold;">Вийти</a>
 </p>
 
 <h2>Голосування</h2>
+
+{% if error_message %}
+<div style="color:red; text-align:center; margin-bottom:20px;">{{ error_message }}</div>
+{% endif %}
 
 <div class="objects">
     {% for flower in flowers %}
@@ -15,29 +19,113 @@
     {% endfor %}
 </div>
 
-<form method="POST">
+<form method="POST" class="voting-form">
     {% csrf_token %}
-    <label for="first">Перше місце:</label>
-    <select name="first" required>
-        {% for flower in flowers %}
-            <option value="{{ flower.id }}">{{ flower.name }}</option>
-        {% endfor %}
-    </select>
 
-    <label for="second">Друге місце:</label>
-    <select name="second" required>
-        {% for flower in flowers %}
-            <option value="{{ flower.id }}">{{ flower.name }}</option>
-        {% endfor %}
-    </select>
+    <div class="form-group">
+        <label for="first">Перше місце:</label>
+        <select name="first" required>
+            <option value="" disabled selected>Оберіть квітку</option>
+            {% for flower in flowers %}
+                <option value="{{ flower.id }}">{{ flower.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-    <label for="third">Третє місце:</label>
-    <select name="third" required>
-        {% for flower in flowers %}
-            <option value="{{ flower.id }}">{{ flower.name }}</option>
-        {% endfor %}
-    </select>
+    <div class="form-group">
+        <label for="second">Друге місце:</label>
+        <select name="second" required>
+            <option value="" disabled selected>Оберіть квітку</option>
+            {% for flower in flowers %}
+                <option value="{{ flower.id }}">{{ flower.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-    <button type="submit">Надіслати</button>
+    <div class="form-group">
+        <label for="third">Третє місце:</label>
+        <select name="third" required>
+            <option value="" disabled selected>Оберіть квітку</option>
+            {% for flower in flowers %}
+                <option value="{{ flower.id }}">{{ flower.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit">Надіслати голос</button>
 </form>
+
+<style>
+    .objects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .object-btn {
+        background: #ffffff;
+        border: 2px solid #4b6cb7;
+        color: #4b6cb7;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+    .object-btn:hover {
+        background: #4b6cb7;
+        color: white;
+    }
+
+    .voting-form {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .voting-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .voting-form label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .voting-form select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        background-color: #fff;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='10'%20viewBox='0%200%2014%2010'%3E%3Cpath%20fill='gray'%20d='M7%2010L0%200h14z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    .voting-form button {
+        margin-top: 20px;
+        background: linear-gradient(to right, #182848, #4b6cb7);
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 12px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .voting-form button:hover {
+        background: linear-gradient(to right, #283e51, #485563);
+    }
+</style>
+
 {% endblock %}

@@ -3,33 +3,98 @@
 {% block title %}Голос прийнято{% endblock %}
 
 {% block content %}
-<h2>Дякуємо за ваш голос!</h2>
+<p style="text-align:right; margin-bottom: 20px;">Вітаємо, {{ request.user.first_name }}!
+    <a href="{% url 'logout' %}" style="color:#4b6cb7; font-weight:bold;">Вийти</a>
+</p>
 
-<h3>Статистика:</h3>
+<h2 style="text-align: center; font-size: 32px; font-weight: bold; color: #333;">Дякуємо за ваш голос!</h2>
 
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>Квітка</th>
-            <th>Перше місце (3 бали)</th>
-            <th>Друге місце (2 бали)</th>
-            <th>Третє місце (1 бал)</th>
-            <th>Загальний бал</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for flower_score in flower_scores %}
-        <tr>
-            <td>{{ flower_score.flower.name }}</td>
-            <td>{{ flower_score.first_place_votes }}</td>
-            <td>{{ flower_score.second_place_votes }}</td>
-            <td>{{ flower_score.third_place_votes }}</td>
-            <td>{{ flower_score.total_points }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h3 style="text-align: center; color: #555;">Статистика голосування</h3>
 
-<a href="{% url 'voting' %}">Змінити голос</a>
+<div class="table-container" style="margin-top: 40px; overflow-x: auto; border-radius: 15px; border: 1px solid #ddd; background-color: #f9f9f9; padding: 20px;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #4b6cb7; color: white; font-size: 18px; text-align: center;">
+                <th>Квітка</th>
+                <th>Перше місце (3 бали)</th>
+                <th>Друге місце (2 бали)</th>
+                <th>Третє місце (1 бал)</th>
+                <th>Загальний бал</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flower_score in flower_scores %}
+            <tr style="background-color: #fff; text-align: center; font-size: 16px;">
+                <td style="padding: 10px; color: #555;">{{ flower_score.flower.name }}</td>
+                <td style="padding: 10px; color: #4b6cb7;">{{ flower_score.first_place_votes }}</td>
+                <td style="padding: 10px; color: #4b6cb7;">{{ flower_score.second_place_votes }}</td>
+                <td style="padding: 10px; color: #4b6cb7;">{{ flower_score.third_place_votes }}</td>
+                <td style="padding: 10px; font-weight: bold; color: #333;">{{ flower_score.total_points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<canvas id="flowerChart" width="400" height="200" style="margin-top: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('flowerChart').getContext('2d');
+    const flowerChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for flower_score in flower_scores %}'{{ flower_score.flower.name }}',{% endfor %}],
+            datasets: [{
+                label: 'Загальний бал',
+                data: [{% for flower_score in flower_scores %}{{ flower_score.total_points }},{% endfor %}],
+                backgroundColor: 'rgba(75, 108, 183, 0.6)',
+                borderColor: 'rgba(75, 108, 183, 1)',
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    },
+                    grid: {
+                        color: '#e2e2e2'
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff'
+                }
+            }
+        }
+    });
+</script>
+
+<div style="text-align: center; margin-top: 40px;">
+    <a href="{% url 'voting' %}" style="font-size: 18px; background-color: #4b6cb7; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; transition: 0.3s;">
+        Змінити голос
+    </a>
+</div>
 
 {% endblock %}

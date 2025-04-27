@@ -67,8 +67,29 @@
             text-align: center;
             margin-top: 20px;
             color: #182848;
-        }
-    </style>
+        }<style>
+    .objects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    .object-btn {
+        padding: 10px 20px;
+        background: #fff;
+        border: 2px solid #4b6cb7;
+        border-radius: 20px;
+        font-weight: bold;
+        color: #4b6cb7;
+        transition: 0.3s;
+    }
+    .object-btn:hover {
+        background: #4b6cb7;
+        color: #fff;
+        cursor: default;
+    }
+</style>
 </head>
 <body>
     <div class="container">

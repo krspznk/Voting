@@ -46,9 +46,20 @@ def voting_view(request):
         existing_vote = None
 
     if request.method == 'POST':
-        first = Flower.objects.get(id=request.POST.get('first'))
-        second = Flower.objects.get(id=request.POST.get('second'))
-        third = Flower.objects.get(id=request.POST.get('third'))
+        first_id = request.POST.get('first')
+        second_id = request.POST.get('second')
+        third_id = request.POST.get('third')
+
+        if len({first_id, second_id, third_id}) < 3:
+            # Повертаємо помилку на ту ж сторінку
+            flowers = Flower.objects.all()
+            error_message = "Будь ласка, оберіть різні квіти для кожного місця."
+            return render(request, 'poll/voting.html',
+                          {'flowers': flowers, 'existing_vote': existing_vote, 'error_message': error_message})
+
+        first = Flower.objects.get(id=first_id)
+        second = Flower.objects.get(id=second_id)
+        third = Flower.objects.get(id=third_id)
 
         if existing_vote:
             existing_vote.first_place = first
