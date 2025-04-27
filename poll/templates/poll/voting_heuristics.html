@@ -1,0 +1,23 @@
+{% extends 'poll/base.html' %}
+
+{% block title %}Вибір евристик{% endblock %}
+
+{% block content %}
+<h2>Опитування: виберіть евристики для відсіювання об'єктів</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <p>Виберіть 1-3 евристики:</p>
+
+    <label><input type="checkbox" name="heuristics" value="E1"> Евристика E1: участь на 3 місці</label><br>
+    <label><input type="checkbox" name="heuristics" value="E2"> Евристика E2: участь на 2 місці</label><br>
+    <label><input type="checkbox" name="heuristics" value="E3"> Евристика E3: участь на 1 місці</label><br>
+    <label><input type="checkbox" name="heuristics" value="E4"> Евристика E4: участь в 2х порівняннях на 3 місці</label><br>
+    <label><input type="checkbox" name="heuristics" value="E5"> Евристика E5: 3 місце + 2 місце</label><br>
+    <label><input type="checkbox" name="heuristics" value="E6"> Евристика E6: Мала кількість загальних балів</label><br>
+    <label><input type="checkbox" name="heuristics" value="E7"> Евристика E7: Мала кількість голосів взагалі</label><br>
+
+    <button type="submit">Надіслати вибір</button>
+</form>
+
+{% endblock %}

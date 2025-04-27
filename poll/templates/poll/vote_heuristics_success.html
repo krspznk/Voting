@@ -1,0 +1,28 @@
+{% extends 'poll/base.html' %}
+
+{% block title %}Голос за евристики прийнято{% endblock %}
+
+{% block content %}
+<h2>Дякуємо за ваш вибір евристик!</h2>
+
+<h3>Поточні результати голосування:</h3>
+
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Евристика</th>
+            <th>Кількість голосів</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for heuristic, count in heuristic_counts.items %}
+        <tr>
+            <td>{{ heuristic }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'voting_heuristics' %}">Проголосувати ще раз</a>
+{% endblock %}

@@ -111,3 +111,37 @@ def vote_success_view(request):
     flower_scores.sort(key=lambda x: x['total_points'], reverse=True)
 
     return render(request, 'poll/vote_success.html', {'flower_scores': flower_scores})
+
+
+from django.shortcuts import render, redirect
+from .models import HeuristicVote  # Модель для збереження голосів (створимо нижче)
+
+def voting_heuristics(request):
+    if request.method == 'POST':
+        selected_heuristics = request.POST.getlist('heuristics')
+        if 1 <= len(selected_heuristics) <= 3:
+            HeuristicVote.objects.create(
+                user=request.user,
+                selected_heuristics=selected_heuristics
+            )
+            return redirect('vote_heuristics_success')
+        else:
+            error_message = "Будь ласка, виберіть від 1 до 3 евристик."
+            return render(request, 'poll/voting_heuristics.html', {'error_message': error_message})
+    return render(request, 'poll/voting_heuristics.html')
+
+
+def vote_heuristics_success(request):
+    votes = HeuristicVote.objects.all()
+    heuristic_counts = {}
+
+    for vote in votes:
+        for heuristic in vote.selected_heuristics:
+            if heuristic not in heuristic_counts:
+                heuristic_counts[heuristic] = 1
+            else:
+                heuristic_counts[heuristic] += 1
+
+    heuristic_counts = dict(sorted(heuristic_counts.items(), key=lambda item: item[1], reverse=True))
+
+    return render(request, 'poll/vote_heuristics_success.html', {'heuristic_counts': heuristic_counts})
