@@ -128,4 +128,4 @@ DEBUG = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['dpg-d06e729r0fns73fhmu80-a.oregon-postgres.render.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['dpg-d06e729r0fns73fhmu80-a.oregon-postgres.render.com', 'localhost', '127.0.0.1', 'voting-qp9o.onrender.com']
