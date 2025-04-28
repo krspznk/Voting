@@ -1,0 +1,254 @@
+{% extends 'poll/base.html' %}
+
+{% block title %}Результат застосування евристик{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .accordion {
+        background-color: #f0f4fb;
+        color: #333;
+        cursor: pointer;
+        padding: 14px;
+        width: 100%;
+        border: none;
+        border-radius: 8px;
+        text-align: left;
+        font-size: 18px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+
+    .accordion:hover, .accordion.active {
+        background-color: #dce6f9;
+    }
+
+    .panel {
+        display: none;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+        padding: 14px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #4b6cb7;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #eef3ff;
+    }
+
+    .section-title {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        font-size: 28px;
+        color: #2d3e50;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .pretty-list {
+        background: #f7f9fc;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        margin-bottom: 35px;
+    }
+
+    .pretty-list h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #4b6cb7;
+        text-align: center;
+    }
+
+    .pretty-list ol,
+    .pretty-list ul {
+        margin: 0;
+        padding: 0;
+        list-style-position: inside;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .pretty-list li {
+        margin-bottom: 10px;
+        padding: 10px 14px;
+        background-color: #ffffff;
+        border: 1px solid #dce3f1;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .pretty-list li:hover {
+        background-color: #e8efff;
+    }
+
+    .empty-message {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .button-link {
+        background-color: #4b6cb7;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+
+    .button-link:hover {
+        background-color: #3952a4;
+    }
+
+    .logout-link {
+        color: #4b6cb7;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .logout-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h2 class="section-title">Дякуємо за ваш голос!</h2>
+
+<h2 class="section-title">Результати застосування евристик</h2>
+
+<!-- Фінальний список квітів -->
+<div class="pretty-list">
+    <h3>Фінальний список квітів (максимум 10)</h3>
+    <ol>
+        {% for flower in final_flowers %}
+            <li>{{ flower.flower.name }}</li>
+        {% endfor %}
+    </ol>
+</div>
+
+<div class="pretty-list">
+    <h3>Евристики, які ви обрали</h3>
+    <ul>
+      {% for item in selected_heuristics_data %}
+        <li>{{ item.code }} — {{ item.description }}</li>
+      {% empty %}
+        <div class="empty-message">
+            Ви ще не обрали жодної евристики.
+        </div>
+      {% endfor %}
+    </ul>
+</div>
+
+<h3 class="section-title">Частота використання евристик серед всіх експертів</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Код</th><th>Опис</th><th>Голосів</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in heuristic_stats %}
+      <tr>
+        <td>{{ item.code }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Покроковий процес -->
+<button class="accordion" style="color: white;">Покроковий процес застосування евристик</button>
+<div class="panel">
+    {% for step in steps %}
+        <h4>Евристика: {{ step.heuristic }}</h4>
+        <p><strong>Опис:</strong> {{ step.description }}</p>
+        <p><strong>Видалено квіти:</strong>
+            {% if step.removed %}
+                {{ step.removed|join:", " }}
+            {% else %}
+                Нічого не видалено
+            {% endif %}
+        </p>
+        <p><strong>Залишилися квіти:</strong> {{ step.remaining|join:", " }}</p>
+        <hr>
+    {% endfor %}
+</div>
+
+<!-- Результати голосування за квіти -->
+<button class="accordion" style="color: white;">Таблиця результатів голосування за квіти</button>
+<div class="panel">
+    <table>
+        <thead>
+            <tr>
+                <th>Квітка</th>
+                <th>Перше місце (3 бали)</th>
+                <th>Друге місце (2 бали)</th>
+                <th>Третє місце (1 бал)</th>
+                <th>Загальний бал</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flower in flower_scores %}
+            <tr>
+                <td>{{ flower.flower.name }}</td>
+                <td>{{ flower.first_place_votes }}</td>
+                <td>{{ flower.second_place_votes }}</td>
+                <td>{{ flower.third_place_votes }}</td>
+                <td><strong>{{ flower.total_points }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="text-align:center;">
+    <a href="{% url 'voting_heuristics' %}" style="font-size: 18px; background-color: #4b6cb7; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; transition: 0.3s;">
+        Проголосувати ще раз
+    </a>
+</div>
+
+<script>
+    const acc = document.getElementsByClassName("accordion");
+    for (let i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            const panel = this.nextElementSibling;
+            panel.style.display = panel.style.display === "block" ? "none" : "block";
+        });
+    }
+</script>
+{% endblock %}

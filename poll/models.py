@@ -23,7 +23,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class HeuristicVote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     selected_heuristics = models.JSONField()
 
     def __str__(self):
